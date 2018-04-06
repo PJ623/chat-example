@@ -1,0 +1,87 @@
+<!-- Code mostly copied from Socket.io chat tutorial: https://socket.io/get-started/chat/ -->
+<!-- I reworked some of the tutorial code to use vanilla Javascript instead of jQuery. -->
+
+<!doctype html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 13px Helvetica, Arial;
+        }
+
+        #chat-control-container {
+            background: #000;
+            padding: 3px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #chat-control-container input {
+            border: 0;
+            padding: 10px;
+            width: 90%;
+            margin-right: .5%;
+        }
+
+        #chat-control-container button {
+            width: 9%;
+            background: rgb(130, 224, 255);
+            border: none;
+            padding: 10px;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages li {
+            padding: 5px 10px;
+        }
+
+        #messages li:nth-child(odd) {
+            background: #eee;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="messages">
+
+    </ul>
+    <div id="chat-control-container">
+        <input id="m" type="text" autocomplete="off" />
+        <button id="submit-button">Send</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        document.addEventListener("DOMContentLoaded", (event) => {
+
+            document.getElementById("submit-button").addEventListener("click", submitMessage, false);
+
+            function submitMessage() {
+                socket.emit("chat message", document.getElementById("m").value);
+                document.getElementById("m").value = "";
+            }
+
+            socket.on('chat message', (msg) => {
+                document.getElementById("messages").innerHTML += "<li>" + msg + "</li>";
+            });
+        });
+    </script>
+</body>
+
+</html>
